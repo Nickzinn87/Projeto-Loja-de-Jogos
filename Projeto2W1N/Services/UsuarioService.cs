@@ -43,5 +43,10 @@ namespace Projeto2W1N.Services
         {
             return connection.Table<Usuario>().FirstOrDefault(x => x.CPF == CPF);
         }
+
+        public Usuario ConsultarEmail(string Email)
+        {
+            return connection.Table<Usuario>().FirstOrDefault(x => x.Email == Email);
+        }
     }
 }

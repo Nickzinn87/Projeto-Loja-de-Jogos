@@ -83,7 +83,6 @@ namespace Projeto2W1N.ViewModel
             usuario.CPF = CPF;
             usuario.Email = Email;
             usuario.Senha = Senha;
-            usuario.DataNasc = DataNasc;
 
 
             usuarioService.Adicionar(usuario);
@@ -95,22 +94,21 @@ namespace Projeto2W1N.ViewModel
         }
 
         public ICommand ConsultarCommand { get; set; }
-        public void Consultar()
+        public void Consultar(string Cpf)
         {
-            Usuario usuario = usuarioService.Consultar();
+            Usuario usuario = usuarioService.Consultar(Cpf);
 
             Nome = usuario.Nome;
             CPF = usuario.CPF;
             Email = usuario.Email;
             Senha = usuario.Senha;
-            DataNasc = usuario.DataNasc;
         }
 
         public ICommand LoginCommand { get; set; }
 
-        void Login()
+        public void Login(string EMAIL)
         {
-            Usuario usuario = usuarioService.Consultar();
+            Usuario usuario = usuarioService.ConsultarEmail(EMAIL);
 
             if (usuario == null)
             {
@@ -120,21 +118,20 @@ namespace Projeto2W1N.ViewModel
 
             if (Email == usuario.Email && Senha == usuario.Senha)
             {
-                //AbrirView(new MainPageView());
+                AbrirView(new MainPage());
             }
             else
             {
                 App.Current.MainPage.DisplayAlert("Erro", "Email ou senha incorretos", "OK");
             }
-
-
         }
 
         public UsuarioViewModel()
         {
             CadastrarCommand = new Command(Cadastrar);
-            ConsultarCommand = new Command(Consultar);
-            LoginCommand = new Command(Login);
+            ConsultarCommand = new Command<string>(Consultar);
+            LoginCommand = new Command<string>(Login);
         }
+
     }
 }
