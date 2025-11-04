@@ -11,7 +11,7 @@ namespace Projeto2W1N.ViewModel
     {
         public ICommand VoltarCommand { get; set; }
 
-        private async void Voltar()
+        public async void Voltar()
         {
             await Application.Current.MainPage.
                 Navigation.PopAsync();

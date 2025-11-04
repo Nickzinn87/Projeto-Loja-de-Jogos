@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Projeto2W1N.Models;
 using Projeto2W1N.Services;
+using Projeto2W1N.View;
 
 namespace Projeto2W1N.ViewModel
 {
@@ -72,6 +73,17 @@ namespace Projeto2W1N.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private bool _admin;
+        public bool Admin
+        {
+            get { return _admin; }
+            set
+            {
+                _admin = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand CadastrarCommand { get; set; }
 
         void Cadastrar()
@@ -83,6 +95,7 @@ namespace Projeto2W1N.ViewModel
             usuario.CPF = CPF;
             usuario.Email = Email;
             usuario.Senha = Senha;
+            usuario.Admin = Admin;
 
 
             usuarioService.Adicionar(usuario);
@@ -90,25 +103,28 @@ namespace Projeto2W1N.ViewModel
             App.Current.MainPage.DisplayAlert("Sucesso", "Usuário cadastrado com sucesso!", "OK");
 
 
-            //AbrirView(new UsuarioLoginView());
+
+
+            AbrirView(new LoginPage());
         }
 
         public ICommand ConsultarCommand { get; set; }
-        public void Consultar(string Cpf)
+        public void Consultar()
         {
-            Usuario usuario = usuarioService.Consultar(Cpf);
+            Usuario usuario = usuarioService.ConsultarCPF(_CPF);
 
             Nome = usuario.Nome;
             CPF = usuario.CPF;
             Email = usuario.Email;
             Senha = usuario.Senha;
+            Admin = usuario.Admin;
         }
 
         public ICommand LoginCommand { get; set; }
 
-        public void Login(string EMAIL)
+        public void Login()
         {
-            Usuario usuario = usuarioService.ConsultarEmail(EMAIL);
+            Usuario usuario = usuarioService.ConsultarEmail(_email);
 
             if (usuario == null)
             {
@@ -116,7 +132,7 @@ namespace Projeto2W1N.ViewModel
                 return;
             }
 
-            if (Email == usuario.Email && Senha == usuario.Senha)
+            if (Email == usuario.Email && Senha == usuario.Senha && Admin == usuario.Admin)
             {
                 AbrirView(new MainPage());
             }
@@ -126,11 +142,27 @@ namespace Projeto2W1N.ViewModel
             }
         }
 
+        public ICommand AbrirCadastroCommand { get; set; }
+
+        void AbrirCad()
+        {
+            AbrirView(new CadPage());
+        }
+
+        public ICommand VoltarCommand { get; set; }
+
+        void VoltarComm()
+        {
+            Voltar();
+        }
+
         public UsuarioViewModel()
         {
             CadastrarCommand = new Command(Cadastrar);
-            ConsultarCommand = new Command<string>(Consultar);
-            LoginCommand = new Command<string>(Login);
+            ConsultarCommand = new Command(Consultar);
+            LoginCommand = new Command(Login);
+            AbrirCadastroCommand = new Command(AbrirCad);
+            VoltarCommand = new Command(VoltarComm);
         }
 
     }

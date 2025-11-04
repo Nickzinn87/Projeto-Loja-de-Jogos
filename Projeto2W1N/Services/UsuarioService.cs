@@ -39,7 +39,7 @@ namespace Projeto2W1N.Services
             }
         }
 
-        public Usuario Consultar(string CPF)
+        public Usuario ConsultarCPF(string CPF)
         {
             return connection.Table<Usuario>().FirstOrDefault(x => x.CPF == CPF);
         }
