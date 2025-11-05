@@ -31,17 +31,6 @@ namespace Projeto2W1N.ViewModel
             }
         }
 
-        private Image _imagem;
-        public Image Imagem
-        {
-            get { return _imagem; }
-            set
-            {
-                _imagem = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string _preco;
         public string Preco
         {
@@ -62,6 +51,28 @@ namespace Projeto2W1N.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private bool _Admin;
+        public bool Admin
+        {
+            get { return _Admin; }
+            set
+            {
+                _Admin = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _Cliente;
+        public bool Cliente
+        {
+            get { return _Cliente; }
+            set
+            {
+                _Cliente = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand CadastrarCommand { get; set; }
 
         void Cadastrar()
@@ -70,7 +81,7 @@ namespace Projeto2W1N.ViewModel
             Jogos jogos = new Jogos();
 
             jogos.Nome = Nome;
-            jogos.Imagem = Imagem;
+            //jogos.Imagem = Imagem;
             jogos.Preco = Preco;
             jogos.Desc = Desc;
 
@@ -86,7 +97,7 @@ namespace Projeto2W1N.ViewModel
             Jogos jogos = jogosService.ConsultarNome(_nome);
 
             Nome = jogos.Nome;
-            Imagem = jogos.Imagem;
+            //Imagem = jogos.Imagem;
             Preco = jogos.Preco;
             Desc = jogos.Desc;
         }
@@ -106,9 +117,27 @@ namespace Projeto2W1N.ViewModel
             Jogos jogos = jogosService.ConsultarNome(_nome);
 
             Nome = jogos.Nome;
-            Imagem = jogos.Imagem;
+            //Imagem = jogos.Imagem;
             Preco = jogos.Preco;
             Desc = jogos.Desc;
+        }
+
+        public ICommand ChecagemCommand { get; set; }
+
+        public void Checar()
+        {
+            Usuario usuario = FakeDBSingleton.Instancia.UsuarioLogado;
+
+            if (usuario.Admin == true)
+            {
+                Admin = true;
+                Cliente = false;
+            }
+            else
+            {
+                Admin = false;
+                Cliente = true;
+            }
         }
 
         public JogosViewModel()
@@ -117,6 +146,9 @@ namespace Projeto2W1N.ViewModel
             ConsultarCommand = new Command(Consultar);
             VoltarCommand = new Command(VoltarComm);
             ListagemCommand = new Command(Listar);
+            ChecagemCommand = new Command(Checar);
+
+            Checar();
         }
 
     }

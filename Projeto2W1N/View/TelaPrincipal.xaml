@@ -13,7 +13,7 @@
             <Label Text="Testando se é admin" IsVisible="{Binding Admin}"/>
 
             <!-- Botão para alternar entre admin e normal (mantido do original) -->
-            <Button Text="Alternar modo" Style="{StaticResource ButtonStyle}"/>
+            <Button Text="Alternar modo" Command="{Binding ChecagemCommand}"/>
 
             <!-- Botão visível para todos -->
             <Button Text="Opção comum" />

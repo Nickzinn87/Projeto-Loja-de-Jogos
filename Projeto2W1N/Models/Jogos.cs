@@ -10,7 +10,6 @@ namespace Projeto2W1N.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public Image Imagem { get; set; }
         public string Preco { get; set; }
         public string Desc { get; set; }
     }
