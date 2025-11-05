@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Projeto2W1N.Models;
+﻿using Projeto2W1N.Models;
 using Projeto2W1N.Services;
 using Projeto2W1N.View;
+using System.Windows.Input;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 
 namespace Projeto2W1N.ViewModel
 {
@@ -63,21 +61,11 @@ namespace Projeto2W1N.ViewModel
                 OnPropertyChanged();
             }
         }
-        private string _dataNasc;
-        public string DataNasc
-        {
-            get { return _dataNasc; }
-            set
-            {
-                _dataNasc = value;
-                OnPropertyChanged();
-            }
-        }
 
         private bool _admin;
         public bool Admin
         {
-            get { return _admin; }
+            get     { return _admin; }
             set
             {
                 _admin = value;
@@ -134,7 +122,8 @@ namespace Projeto2W1N.ViewModel
 
             if (Email == usuario.Email && Senha == usuario.Senha && Admin == usuario.Admin)
             {
-                AbrirView(new MainPage());
+                usuarioService.Logar(usuario);
+                AbrirView(new TelaPrincipal());
             }
             else
             {

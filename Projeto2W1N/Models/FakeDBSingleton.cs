@@ -18,6 +18,6 @@ namespace Projeto2W1N.Models
                     (_instancia = new FakeDBSingleton());
             }
         }
-        public Usuario Usuario { get; set; }
+        public Usuario UsuarioLogado { get; set; }
     }
 }

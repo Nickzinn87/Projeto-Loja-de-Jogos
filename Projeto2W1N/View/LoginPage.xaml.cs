@@ -12,7 +12,7 @@ public partial class LoginPage : ContentPage
 
     private void btnLogin_Clicked(object sender, EventArgs e)
     {
-
+    
     }
 
     private void btnCadastrar_Clicked(object sender, EventArgs e)

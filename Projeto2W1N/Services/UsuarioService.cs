@@ -15,6 +15,7 @@ namespace Projeto2W1N.Services
         //FakeDBSingleton dbSingleton = FakeDBSingleton.Instancia;
         private DBService databaseService;
         private SQLiteConnection connection;
+        private FakeDBSingleton dbSingleton = FakeDBSingleton.Instancia;
 
         public UsuarioService()
         {
@@ -37,6 +38,16 @@ namespace Projeto2W1N.Services
             {
                 return connection.Insert(value) > 0;
             }
+        }
+
+        public void Logar(Usuario value)
+        {
+            dbSingleton.UsuarioLogado = value;
+        }
+
+        public Usuario ConsultarSingleton()
+        {
+            return dbSingleton.UsuarioLogado;
         }
 
         public Usuario ConsultarCPF(string CPF)
