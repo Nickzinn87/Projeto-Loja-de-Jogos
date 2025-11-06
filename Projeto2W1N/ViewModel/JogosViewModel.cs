@@ -12,14 +12,9 @@ namespace Projeto2W1N.ViewModel
     public class JogosViewModel : BaseViewModel
     {
         JogosService jogosService = new JogosService();
+        HistoricoService historicoService = new HistoricoService();
+        private FakeDBSingleton dbSingleton = FakeDBSingleton.Instancia;
 
-        //Precismo herdar da classe BaseViewModel
-
-        //Agora iremos implementar as propriedades
-        //dos campos que poderao ser usados em tela
-        //geralmente seguimos os atributos da classe
-        //referenciada, no caso a classe Carro
-        //Mais conhecido como encapsulamento
         private string _nome;
         public string Nome
         {
@@ -73,6 +68,17 @@ namespace Projeto2W1N.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private List<Jogos> _jogosList;
+        public List<Jogos> ListaJogos
+        {
+            get { return _jogosList; }
+            set
+            {
+                _jogosList = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand CadastrarCommand { get; set; }
 
         void Cadastrar()
@@ -88,7 +94,56 @@ namespace Projeto2W1N.ViewModel
 
             jogosService.Adicionar(jogos);
 
-            App.Current.MainPage.DisplayAlert("Sucesso", "Usuário cadastrado com sucesso!", "OK");
+            Listar();
+
+            App.Current.MainPage.DisplayAlert("Sucesso", "Jogo cadastrado com sucesso!", "OK");
+        }
+
+        public ICommand AdicionarCommand { get; set; }
+
+                public async Task Adicionar(Jogos registro)
+                {
+                    Usuario usuarioLogado = dbSingleton.UsuarioLogado;
+                    if (registro == null)
+                        return;
+
+                    bool decisao = await Shell.Current.DisplayAlert(
+                        "Confirmação de exclusão",
+                        $"Deseja realmente comprar este jogo '{registro.Nome}'?",
+                        "Sim", "Não");
+
+                    if (decisao)
+                    {
+                        Historico historico = new Historico();
+                        historico.NomeJogo = registro.Nome;
+                        historico.CPF = usuarioLogado.CPF;
+                        historico.NomeUsuario = usuarioLogado.Nome;
+
+                        historicoService.Adicionar(historico);
+                        Listar();
+                        await Shell.Current.DisplayAlert("Sucesso", "Jogo adicionado com sucesso!", "OK");
+                    }
+                }
+
+
+        public ICommand DeletarCommand { get; set; }
+
+        async Task Deletar(Jogos registro)
+        {
+            if (registro == null)
+                return;
+
+            bool decisao = await Shell.Current.DisplayAlert(
+                "Confirmação de exclusão",
+                $"Deseja realmente excluir o jogo '{registro.Nome}'?",
+                "Sim", "Não");
+
+            if (decisao)
+            {
+                jogosService.Excluir(registro);
+                Listar();
+                await Shell.Current.DisplayAlert("Sucesso", "Jogo excluído com sucesso!", "OK");
+            }
         }
 
         public ICommand ConsultarCommand { get; set; }
@@ -114,12 +169,7 @@ namespace Projeto2W1N.ViewModel
 
         public void Listar()
         {
-            Jogos jogos = jogosService.ConsultarNome(_nome);
-
-            Nome = jogos.Nome;
-            //Imagem = jogos.Imagem;
-            Preco = jogos.Preco;
-            Desc = jogos.Desc;
+            ListaJogos = jogosService.ConsultarTodos();
         }
 
         public ICommand ChecagemCommand { get; set; }
@@ -147,8 +197,12 @@ namespace Projeto2W1N.ViewModel
             VoltarCommand = new Command(VoltarComm);
             ListagemCommand = new Command(Listar);
             ChecagemCommand = new Command(Checar);
+            DeletarCommand = new Command<Jogos>(async (registro) => await Deletar(registro));
+            AdicionarCommand = new Command<Jogos>(async (registro) => await Adicionar(registro));
+
 
             Checar();
+            Listar();
         }
 
     }

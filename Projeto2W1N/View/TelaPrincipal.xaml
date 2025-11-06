@@ -2,79 +2,132 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Projeto2W1N.View.TelaPrincipal"
+             xmlns:viewmodel="clr-namespace:Projeto2W1N.ViewModel"
              Title="TelaPrincipal">
     <ScrollView>
 
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label x:Name="testando"/>
-            <Label Text="Bem-vindo ao sistema" FontAttributes="Bold" FontSize="18" />
+            <Label x:Name="testando" HorizontalOptions="Center" FontSize="20"/>
 
-            <Label Text="Testando se é admin" IsVisible="{Binding Admin}"/>
-
-            <!-- Botão para alternar entre admin e normal (mantido do original) -->
-            <Button Text="Alternar modo" Command="{Binding ChecagemCommand}"/>
-
-            <!-- Botão visível para todos -->
-            <Button Text="Opção comum" />
+            <Button Text="Historico"/>
 
             <Frame Style="{StaticResource FrameStyle}" IsVisible="{Binding Admin}">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Cadastro de Jogos" Style="{StaticResource SubtitleLabelStyle}"/>
+                    <Label Text="Cadastro de Jogos" HorizontalOptions="Center" Style="{StaticResource SubtitleLabelStyle}"/>
 
                     <Label Text="Nome do Jogo:" />
                     <Entry Placeholder="Digite o nome do jogo" Style="{StaticResource EntryStyle}" 
-                        Text="{Binding NovoJogo.Nome}"/>
+                        Text="{Binding Nome}"/>
 
                     <Label Text="Descrição:" />
-                    <Entry Placeholder="Digite a descrição do jogo" HeightRequest="80" BackgroundColor="#ECF0F1" 
-                        TextColor="#2C3E50" Text="{Binding NovoJogo.Descricao}" />
+                    <Entry Placeholder="Digite a descrição do jogo" HeightRequest="80"
+                           TextColor="#fff" Text="{Binding Desc}" />
 
                     <Label Text="Preço (R$):" />
                     <Entry Placeholder="Digite o preço" Style="{StaticResource EntryStyle}" 
-                        Text="{Binding NovoJogo.Preco}" Keyboard="Numeric" />
+                        Text="{Binding Preco}" Keyboard="Numeric" />
 
-                    <Label Text="Categoria:" />
-                    <Picker Title="Selecione a categoria" ItemsSource="{Binding Categorias}" 
-                        SelectedItem="{Binding NovoJogo.Categoria}" BackgroundColor="#ECF0F1" 
-                            TextColor="#2C3E50"  HeightRequest="40" />
+                    
                     
                     <Button Text="Cadastrar Jogo" Style="{StaticResource ButtonStyle}" 
-                        Command="{Binding CadastrarJogoCommand}" />
+                        Command="{Binding CadastrarCommand}" />
 
-                    <Label Text="Campo administrativo:" IsVisible="{Binding Admin}" />
-                    <Entry Placeholder="Somente administradores" IsVisible="{Binding Admin}" />
+                    <ListView x:Name="lsvLista"
+                              ItemsSource="{Binding ListaJogos}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame CornerRadius="10"
+                                           Padding="10"
+                                           BackgroundColor="#414142"
+                                           Margin="5">  
+                                        <StackLayout Orientation="Horizontal">
+                                            <StackLayout HorizontalOptions="StartAndExpand">
+                                                <Label Text="{Binding Nome}"
+                                           FontSize="20"
+                                           FontAttributes="Bold"/>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="Descrição:"/>
+                                                    <Label Text="{Binding Desc}"
+                                                           Margin="5, 0"/>
+                                                    <Label Text="Preço:"/>
+                                                    <Label Text="{Binding Preco}"
+                                                           Margin="5, 0"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout HorizontalOptions="End"
+                                                         VerticalOptions="Center">
+                                                <Image Source="excluir.png"
+                                                   WidthRequest="60"
+                                                   HeightRequest="60">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:JogosViewModel}}, Path=DeletarCommand}"
+                                                            CommandParameter="{Binding .}"
+                                                        />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </VerticalStackLayout>
             </Frame>
             
 
             <Frame Style="{StaticResource FrameStyle}" IsVisible="{Binding Cliente}">
                 <VerticalStackLayout Spacing="15">
-                    <Label Text="Loja de Jogos" Style="{StaticResource SubtitleLabelStyle}" />
-                    
-                    <CollectionView ItemsSource="{Binding JogosDisponiveis}" SelectionMode="None">
-                        <CollectionView.ItemTemplate>
+                    <Label Text="Loja de Jogos" HorizontalOptions="Center" Style="{StaticResource SubtitleLabelStyle}" />
+
+                    <ListView x:Name="lsvLista2"
+                              ItemsSource="{Binding ListaJogos}">
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Style="{StaticResource FrameStyle}" Padding="10">
-                                    <VerticalStackLayout Spacing="10">
-                                        <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" 
-                                            TextColor="#2C3E50" />
-                                        <Label Text="{Binding Descricao}" FontSize="14" TextColor="#7F8C8D" />
-                                        <Label Text="{Binding Preco, StringFormat='Preço: R$ {0:F2}'}" 
-                                            FontSize="14" TextColor="#E74C3C" />
-                                        <Button Text="Comprar" Style="{StaticResource ButtonStyle}"/>
-                                    </VerticalStackLayout>
-                                </Frame>
+                                <ViewCell>
+                                    <Frame CornerRadius="10"
+                                           Padding="10"
+                                           BackgroundColor="#414142"
+                                           Margin="5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <StackLayout HorizontalOptions="StartAndExpand">
+                                                <Label Text="{Binding Nome}"
+                                                       FontSize="20"
+                                                       FontAttributes="Bold"/>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="Descrição:"/>
+                                                    <Label Text="{Binding Desc}"
+                                                           Margin="5, 0"/>
+                                                    <Label Text="Preço:"/>
+                                                    <Label Text="{Binding Preco}"
+                                                           Margin="5, 0"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout HorizontalOptions="End"
+                                                         VerticalOptions="Center">
+                                                <Image Source="comprar.png"
+                                                       WidthRequest="60"
+                                                       HeightRequest="60">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:JogosViewModel}}, Path=AdicionarCommand}"
+                                                            CommandParameter="{Binding .}"
+                                                        />                  
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </VerticalStackLayout>
             </Frame>
 
-            <Label Text="Campo administrativo:" IsVisible="{Binding Admin}" />
-            <Entry Placeholder="Somente administradores" IsVisible="{Binding Admin}" 
-                Style="{StaticResource EntryStyle}" />
-                
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

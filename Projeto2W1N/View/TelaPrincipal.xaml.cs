@@ -17,8 +17,14 @@ public partial class TelaPrincipal : ContentPage
 
         if (usuario != null)
         {
-            testando.Text = $"Bem-vindo, {usuario.Nome}!";
-            testando.Text = usuario.Admin ? "Função: Administrador" : "Função: Usuário";
+            if (usuario.Admin == true)
+            {
+                testando.Text = $"Bem-vindo ao sistema, {usuario.Nome}!";
+            }
+            else
+            {
+                testando.Text = $"Bem-vindo a nossa loja de jogos, {usuario.Nome}!";
+            }
 
             jogosViewModel.Checar();
         }

@@ -38,9 +38,21 @@ namespace Projeto2W1N.Services
             }
         }
 
+        public bool Excluir(Jogos value)
+        {
+            //dbSingleton.Jogos = value;
+            return connection.Delete(value) > 0;
+        }
+
         public Jogos ConsultarNome(string Nome)
         {
             return connection.Table<Jogos>().FirstOrDefault(x => x.Nome == Nome);
         }
+
+        public List<Jogos> ConsultarTodos()
+        {
+            return connection.Table<Jogos>().ToList();
+        }
+
     }
 }
