@@ -10,7 +10,64 @@
 
             <Label x:Name="testando" HorizontalOptions="Center" FontSize="20"/>
 
-            <Button Text="Historico"/>
+            <Frame Style="{StaticResource FrameStyle}">
+                <StackLayout>
+                    <Button Text="Historico"
+                            Clicked="btnHistorico_Clicked"
+                            Command="{Binding HistoricoCommand}"/>
+
+                    <ListView x:Name="lsvListaHistorico"
+                              IsVisible="False"
+                              ItemsSource="{Binding ListaHistorico}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame CornerRadius="10"
+                                           Padding="10"
+                                           BackgroundColor="#414142"
+                                           Margin="5">
+                                        <StackLayout Orientation="Horizontal">
+                                            <StackLayout HorizontalOptions="StartAndExpand">
+                                                <Label Text="{Binding NomeUsuario}"
+                                                       FontSize="20"
+                                                       FontAttributes="Bold"
+                                                       Margin="5,0"/>
+                                                <Label Text="{Binding CPF}"
+                                                       FontSize="20"
+                                                       FontAttributes="Bold"/>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="Jogo:"/>
+                                                    <Label Text="{Binding NomeJogo}"
+                                                           Margin="10, 0"/>
+                                                    <Label Text="Data:"/>
+                                                    <Label Text="{Binding DataSelec}"
+                                                           Margin="10, 0"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                            <StackLayout HorizontalOptions="End"
+                                                         VerticalOptions="Center">
+                                                <Image Source="excluir.png"
+                                                       WidthRequest="60"
+                                                       HeightRequest="60"
+                                                       IsVisible="{Binding Admin}">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:JogosViewModel}}, Path=DelHistCommand}"
+                                                            CommandParameter="{Binding .}"
+                                                        />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackLayout>
+                
+            </Frame>
 
             <Frame Style="{StaticResource FrameStyle}" IsVisible="{Binding Admin}">
                 <VerticalStackLayout Spacing="15">

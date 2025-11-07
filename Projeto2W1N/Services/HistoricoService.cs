@@ -23,7 +23,18 @@ namespace Projeto2W1N.Services
 
         public bool Adicionar(Historico value)
         {
-            return connection.Insert(value) > 0;
+            var existe = connection.Table<Historico>()
+                .FirstOrDefault(c => c.NomeJogo == value.NomeJogo && c.CPF == value.CPF);
+
+            if (existe != null)
+            {
+                value.Id = existe.Id;
+                return connection.Update(value) > 0;
+            }
+            else
+            {
+                return connection.Insert(value) > 0;
+            }
         }
 
         public bool Excluir(Historico value)

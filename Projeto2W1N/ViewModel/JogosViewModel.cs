@@ -79,6 +79,17 @@ namespace Projeto2W1N.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private List<Historico> _histList;
+        public List<Historico> ListaHistorico
+        {
+            get { return _histList; }
+            set
+            {
+                _histList = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand CadastrarCommand { get; set; }
 
         void Cadastrar()
@@ -108,7 +119,7 @@ namespace Projeto2W1N.ViewModel
                         return;
 
                     bool decisao = await Shell.Current.DisplayAlert(
-                        "Confirmação de exclusão",
+                        "Confirmação de compra",
                         $"Deseja realmente comprar este jogo '{registro.Nome}'?",
                         "Sim", "Não");
 
@@ -121,7 +132,7 @@ namespace Projeto2W1N.ViewModel
 
                         historicoService.Adicionar(historico);
                         Listar();
-                        await Shell.Current.DisplayAlert("Sucesso", "Jogo adicionado com sucesso!", "OK");
+                        await Shell.Current.DisplayAlert("Sucesso", "Jogo adicionado com sucesso ao historico!", "OK");
                     }
                 }
 
@@ -143,6 +154,26 @@ namespace Projeto2W1N.ViewModel
                 jogosService.Excluir(registro);
                 Listar();
                 await Shell.Current.DisplayAlert("Sucesso", "Jogo excluído com sucesso!", "OK");
+            }
+        }
+
+        public ICommand DelHistCommand { get; set; }
+
+        async Task DeletarHistorico(Historico registro)
+        {
+            if (registro == null)
+                return;
+
+            bool decisao = await Shell.Current.DisplayAlert(
+                "Confirmação de exclusão",
+                $"Deseja realmente excluir o registro de '{registro.NomeUsuario}'?",
+                "Sim", "Não");
+
+            if (decisao)
+            {
+                historicoService.Excluir(registro);
+                ListarHistorico();
+                await Shell.Current.DisplayAlert("Sucesso", "Registro excluído com sucesso!", "OK");
             }
         }
 
@@ -172,6 +203,13 @@ namespace Projeto2W1N.ViewModel
             ListaJogos = jogosService.ConsultarTodos();
         }
 
+        public ICommand HistoricoCommand { get; set; }
+
+        public void ListarHistorico()
+        {
+            ListaHistorico = historicoService.ConsultarTodos();
+        }
+
         public ICommand ChecagemCommand { get; set; }
 
         public void Checar()
@@ -196,13 +234,16 @@ namespace Projeto2W1N.ViewModel
             ConsultarCommand = new Command(Consultar);
             VoltarCommand = new Command(VoltarComm);
             ListagemCommand = new Command(Listar);
+            HistoricoCommand = new Command(ListarHistorico);
             ChecagemCommand = new Command(Checar);
             DeletarCommand = new Command<Jogos>(async (registro) => await Deletar(registro));
+            DelHistCommand = new Command<Historico>(async (registro) => await DeletarHistorico(registro));
             AdicionarCommand = new Command<Jogos>(async (registro) => await Adicionar(registro));
 
 
             Checar();
             Listar();
+            ListarHistorico();
         }
 
     }
